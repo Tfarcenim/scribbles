@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  Y",
+    " # ",
+    "X  "
+  ],
+  "key": {
+    "#": {
+      "tag": "forge:rods/wooden"
+    },
+    "X": {
+      "item": "minecraft:charcoal"
+    },
+    "Y": {
+      "tag": "forge:dyes/yellow"
+    }
+  },
+  "result": {
+    "item": "scribbles:pencil"
+  }
+}
