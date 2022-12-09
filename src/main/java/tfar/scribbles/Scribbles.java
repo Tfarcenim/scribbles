@@ -1,6 +1,6 @@
-package com.tfar.examplemod;
+package tfar.scribbles;
 
-import com.tfar.examplemod.network.Message;
+import tfar.scribbles.network.Message;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.Item;
@@ -42,7 +42,7 @@ public class Scribbles
   }
 
   private void doClientStuff(final FMLClientSetupEvent event) {
-    ScreenManager.registerFactory(Obj.container, ScribbleGui::new);
+    ScreenManager.registerFactory(Obj.container, ScribbleScreen::new);
 
   }
 

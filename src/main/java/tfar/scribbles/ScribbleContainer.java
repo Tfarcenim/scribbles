@@ -1,6 +1,6 @@
-package com.tfar.examplemod;
+package tfar.scribbles;
 
-import com.tfar.examplemod.Util.a;
+import tfar.scribbles.Util.a;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
@@ -10,6 +10,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.Util;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraftforge.items.ItemStackHandler;
 import net.minecraftforge.items.SlotItemHandler;
@@ -130,10 +131,10 @@ public class ScribbleContainer extends Container {
   public boolean isValid(String s) {
     try {
       boolean isValid = ForgeRegistries.ITEMS.getValue(new ResourceLocation(s)) != Items.AIR;
-      if (!isValid) this.player.sendMessage(new StringTextComponent("Invalid name!"));
+      if (!isValid) this.player.sendMessage(new StringTextComponent("Invalid name!"),Util.DUMMY_UUID);
       return isValid;
     } catch (Exception e) {
-      this.player.sendMessage(new StringTextComponent("Invalid name!"));
+      this.player.sendMessage(new StringTextComponent("Invalid name!"), Util.DUMMY_UUID);
       return false;
     }
   }

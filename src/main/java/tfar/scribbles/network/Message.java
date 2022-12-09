@@ -1,6 +1,6 @@
-package com.tfar.examplemod.network;
+package tfar.scribbles.network;
 
-import com.tfar.examplemod.Scribbles;
+import tfar.scribbles.Scribbles;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;

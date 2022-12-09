@@ -1,14 +1,14 @@
-package com.tfar.examplemod;
+package tfar.scribbles;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.tfar.examplemod.Util.a;
-import com.tfar.examplemod.network.C2ConstructionPacket;
-import com.tfar.examplemod.network.C2SDeconstructionPacket;
-import com.tfar.examplemod.network.Message;
+import tfar.scribbles.Util.a;
+import tfar.scribbles.network.C2ConstructionPacket;
+import tfar.scribbles.network.C2SDeconstructionPacket;
+import tfar.scribbles.network.Message;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.IContainerListener;
@@ -18,6 +18,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 
@@ -29,7 +31,7 @@ import java.util.stream.StreamSupport;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE;
 import static org.lwjgl.glfw.GLFW.GLFW_KEY_TAB;
 
-public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements IContainerListener {
+public class ScribbleScreen extends ContainerScreen<ScribbleContainer> implements IContainerListener {
 
   public static final ResourceLocation BACKGROUND = new ResourceLocation(Scribbles.MODID,"textures/gui/pencil_container.png");
 
@@ -38,7 +40,7 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
   public int slotcolor = 0;
   public List<String> missingletters = new ArrayList<>();
 
-  public ScribbleGui(ScribbleContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
+  public ScribbleScreen(ScribbleContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
     super(screenContainer, inv, titleIn);
     ySize+=80;
   }
@@ -50,7 +52,7 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
     this.minecraft.keyboardListener.enableRepeatEvents(true);
     int i = (this.width - this.xSize) / 2;
     int j = (this.height - this.ySize) / 2;
-    this.input = new TextFieldWidget(this.font, i + 29, j + 50, 120, 12, I18n.format("container.repair"));
+    this.input = new TextFieldWidget(this.font, i + 29, j + 50, 120, 12,new TranslationTextComponent("container.repair"));
     this.input.setCanLoseFocus(false);
     this.input.changeFocus(true);
     this.input.setTextColor(-1);
@@ -62,13 +64,13 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
     this.container.addListener(this);
     this.setFocusedDefault(this.input);
 
-    this.addButton(new Button(guiLeft + 12, guiTop + 4 ,46,20,"Destroy",
+    this.addButton(new Button(guiLeft + 12, guiTop + 4 ,46,20,new StringTextComponent("Destroy"),
             b -> {
       Message.INSTANCE.sendToServer(new C2SDeconstructionPacket());
       this.container.deconstruct();
             }));
 
-    this.addButton(new Button(guiLeft + 126, guiTop + 4 ,30,20,"Build",
+    this.addButton(new Button(guiLeft + 126, guiTop + 4 ,30,20,new StringTextComponent("Build"),
             b -> {
       Message.INSTANCE.sendToServer(new C2ConstructionPacket(input.getText()));
       this.container.construct(input.getText());
@@ -77,12 +79,12 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
   }
 
   @Override
-  public void render(int p_render_1_, int p_render_2_, float p_render_3_) {
-    this.renderBackground();
-    super.render(p_render_1_, p_render_2_, p_render_3_);
+  public void render(MatrixStack stack,int p_render_1_, int p_render_2_, float p_render_3_) {
+    this.renderBackground(stack);
+    super.render(stack,p_render_1_, p_render_2_, p_render_3_);
     RenderSystem.disableBlend();
-    this.input.render(p_render_1_, p_render_2_, p_render_3_);
-    this.renderHoveredToolTip(p_render_1_, p_render_2_);
+    this.input.render(stack,p_render_1_, p_render_2_, p_render_3_);
+    this.renderHoveredTooltip(stack,p_render_1_, p_render_2_);
   }
 
   private void onEdited(String text) {
@@ -102,7 +104,7 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
    * @param mouseY
    */
   @Override
-  protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY) {
+  protected void drawGuiContainerBackgroundLayer(MatrixStack stack,float partialTicks, int mouseX, int mouseY) {
     RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
     this.minecraft.getTextureManager().bindTexture(BACKGROUND);
     int i = (this.width - this.xSize) / 2;
@@ -111,10 +113,10 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
     int y = 48;
     int x1 = 134;
     int y1 = 30;
-    this.blit(i, j, 0, 0, this.xSize, this.ySize);
-    fill(i+x,j+y,i+126+x,j+12+y,0xff000000);
+    this.blit(stack,i, j, 0, 0, this.xSize, this.ySize);
+    fill(stack,i+x,j+y,i+126+x,j+12+y,0xff000000);
     if (slotcolor != 0){
-      fill(i+x1,j+y1,i+16+x1,j+16+y1,slotcolor);
+      fill(stack,i+x1,j+y1,i+16+x1,j+16+y1,slotcolor);
     }
   }
 
@@ -145,14 +147,14 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
   }
 
   @Override
-  protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
+  protected void drawGuiContainerForegroundLayer(MatrixStack stack,int mouseX, int mouseY) {
     int initaly = 63;
     int y = initaly;
     int x = 8;
     CompoundNBT nbt = this.container.scribble.getOrCreateChildTag("scribbles");
   for (String s : a.chars) {
     int color = missingletters.contains(s) ? 0xff0000 : 0x404040;
-      this.font.drawString(s + ": "+nbt.getInt(s), x, y, color);
+      this.font.drawString(stack,s + ": "+nbt.getInt(s), x, y, color);
       y += 10;
       if (y > 153){
         y = initaly ; x += 40;
@@ -160,7 +162,7 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
     }
   }
 
-  public boolean keyPressed(int keyCode, int p_keyPressed_2_, int p_keyPressed_3_) {
+  public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
     if (keyCode == GLFW_KEY_ESCAPE) {
       this.minecraft.player.closeScreen();
     }
@@ -169,7 +171,7 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
       getSuggestions();
     }
 
-    return this.input.keyPressed(keyCode, p_keyPressed_2_, p_keyPressed_3_) || this.input.func_212955_f() || super.keyPressed(keyCode, p_keyPressed_2_, p_keyPressed_3_);
+    return this.input.keyPressed(keyCode, scanCode, modifiers) || this.input.canWrite() || super.keyPressed(keyCode, scanCode, modifiers);
   }
   public void getSuggestions(){
     String s = input.getText();
@@ -189,8 +191,8 @@ public class ScribbleGui extends ContainerScreen<ScribbleContainer> implements I
     }
   }
 
-  public void removed() {
-    super.removed();
+  public void onClose() {
+    super.onClose();
     this.minecraft.keyboardListener.enableRepeatEvents(false);
     this.container.removeListener(this);
   }

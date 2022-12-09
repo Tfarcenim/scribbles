@@ -1,4 +1,4 @@
-package com.tfar.examplemod.Util;
+package tfar.scribbles.Util;
 
 public class a {
   public static String[] decompose(String resourceName, char splitOn) {

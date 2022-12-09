@@ -1,4 +1,4 @@
-package com.tfar.examplemod;
+package tfar.scribbles;
 
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.IInventory;

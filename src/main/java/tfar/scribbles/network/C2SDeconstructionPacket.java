@@ -1,6 +1,6 @@
-package com.tfar.examplemod.network;
+package tfar.scribbles.network;
 
-import com.tfar.examplemod.ScribbleContainer;
+import tfar.scribbles.ScribbleContainer;
 import net.minecraft.inventory.container.Container;
 import net.minecraftforge.fml.network.NetworkEvent;
 
